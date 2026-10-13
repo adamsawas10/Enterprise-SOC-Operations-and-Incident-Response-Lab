@@ -1,0 +1,2 @@
+timestamp,host,event_id,start,end,ticket
+2026-10-03T03:00:00Z,NS-DC01,1102,2026-10-03T02:30:00Z,2026-10-03T03:30:00Z,CHG-DEMO-001

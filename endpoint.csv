@@ -1,0 +1,2 @@
+timestamp,host,username,process,command_line
+2026-10-02T11:00:00Z,NS-WKS01,jdoe,C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe,powershell.exe -WindowStyle Hidden -EncodedCommand [REDACTED_SYNTHETIC]

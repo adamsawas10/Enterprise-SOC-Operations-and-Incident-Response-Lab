@@ -1,0 +1,221 @@
+{
+  "scope": "synthetic training data; human review required",
+  "input_records": {
+    "windows": 11,
+    "endpoint": 1,
+    "network": 1,
+    "approved_activities": 1
+  },
+  "generated_alerts": 4,
+  "alerts": [
+    {
+      "id": "AUTO-001",
+      "category": "repeated_failed_authentication",
+      "triage_priority": "MEDIUM",
+      "analyst_verdict": "REVIEW_REQUIRED",
+      "interpretation": "Multiple authentication failures occurred for the same account and source IP; this does not establish attacker intent.",
+      "evidence": [
+        {
+          "ref": "windows:2",
+          "source": "windows",
+          "time": "2026-10-01T09:00:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:3",
+          "source": "windows",
+          "time": "2026-10-01T09:01:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:4",
+          "source": "windows",
+          "time": "2026-10-01T09:02:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:5",
+          "source": "windows",
+          "time": "2026-10-01T09:03:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:6",
+          "source": "windows",
+          "time": "2026-10-01T09:04:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:7",
+          "source": "windows",
+          "time": "2026-10-01T09:05:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:8",
+          "source": "windows",
+          "time": "2026-10-01T09:06:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:9",
+          "source": "windows",
+          "time": "2026-10-01T09:07:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        },
+        {
+          "ref": "windows:10",
+          "source": "windows",
+          "time": "2026-10-01T09:08:00+00:00",
+          "event_id": "4625",
+          "host": "NS-DC01",
+          "username": "jdoe",
+          "source_ip": "192.0.2.44"
+        }
+      ],
+      "investigation_next_steps": [
+        "Check logon type, IP origin, and account-owner context.",
+        "Review related host events and approved activities.",
+        "Document analyst verdict and escalate if evidence warrants it."
+      ],
+      "attack_mapping_candidates": [
+        "T1110 (Brute Force)"
+      ],
+      "details": {
+        "username": "jdoe",
+        "source_ip": "192.0.2.44",
+        "failure_count": 9,
+        "successful_authentication_observed": false
+      }
+    },
+    {
+      "id": "AUTO-002",
+      "category": "privileged_group_change",
+      "triage_priority": "MEDIUM",
+      "analyst_verdict": "REVIEW_REQUIRED",
+      "interpretation": "Privileged-group membership changed.",
+      "evidence": [
+        {
+          "ref": "windows:11",
+          "source": "windows",
+          "time": "2026-10-02T10:00:00+00:00",
+          "event_id": "4728",
+          "host": "NS-DC01",
+          "username": "temp_admin"
+        }
+      ],
+      "investigation_next_steps": [
+        "Check the approved change record and identity of the actor.",
+        "Confirm exact event details and surrounding activity.",
+        "Record a justified benign, malicious, or inconclusive verdict."
+      ],
+      "attack_mapping_candidates": [
+        "T1098 (Account Manipulation)"
+      ],
+      "details": {
+        "event_id": "4728",
+        "has_approved_activity_context": false,
+        "related_audit_clear_count": 0
+      }
+    },
+    {
+      "id": "AUTO-003",
+      "category": "powershell_execution_with_network_context",
+      "triage_priority": "HIGH",
+      "analyst_verdict": "REVIEW_REQUIRED",
+      "interpretation": "PowerShell launched with encoded or hidden-window options. Nearby outbound network activity was observed from the same host, but process ownership is NOT established.",
+      "evidence": [
+        {
+          "ref": "endpoint:2",
+          "source": "endpoint",
+          "time": "2026-10-02T11:00:00+00:00",
+          "host": "NS-WKS01",
+          "username": "jdoe",
+          "process": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe"
+        },
+        {
+          "ref": "network:2",
+          "source": "network",
+          "time": "2026-10-02T11:01:00+00:00",
+          "host": "NS-WKS01",
+          "destination_ip": "203.0.113.50",
+          "destination_port": "443"
+        }
+      ],
+      "investigation_next_steps": [
+        "Check full command and parent process in endpoint telemetry.",
+        "Validate whether activity was sanctioned administration.",
+        "Correlate process GUID/PID to network event before attributing traffic."
+      ],
+      "attack_mapping_candidates": [
+        "T1059.001 (PowerShell)"
+      ],
+      "details": {
+        "host": "NS-WKS01",
+        "nearby_network_events": 1
+      }
+    },
+    {
+      "id": "AUTO-004",
+      "category": "audit_log_cleared",
+      "triage_priority": "LOW",
+      "analyst_verdict": "REVIEW_REQUIRED",
+      "interpretation": "A Windows Security audit log was cleared. Matching approved-activity metadata exists; verify the ticket before judging the activity benign.",
+      "evidence": [
+        {
+          "ref": "windows:12",
+          "source": "windows",
+          "time": "2026-10-03T03:00:00+00:00",
+          "event_id": "1102",
+          "host": "NS-DC01",
+          "username": "admin"
+        },
+        {
+          "ref": "approved:2",
+          "source": "approved",
+          "time": "2026-10-03T03:00:00+00:00",
+          "event_id": "1102",
+          "host": "NS-DC01",
+          "ticket": "CHG-DEMO-001"
+        }
+      ],
+      "investigation_next_steps": [
+        "Check the approved change record and identity of the actor.",
+        "Confirm exact event details and surrounding activity.",
+        "Record a justified benign, malicious, or inconclusive verdict."
+      ],
+      "attack_mapping_candidates": [
+        "T1070.001 (Clear Windows Event Logs)"
+      ],
+      "details": {
+        "event_id": "1102",
+        "has_approved_activity_context": true,
+        "related_audit_clear_count": 0
+      }
+    }
+  ]
+}
