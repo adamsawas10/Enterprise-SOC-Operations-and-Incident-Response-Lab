@@ -3,10 +3,12 @@ from pathlib import Path
 import unittest
 from datetime import datetime, timezone
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+
 from soc_correlator import detect_admin, detect_auth, detect_endpoint, load_csv, parse_time, main
 
-DATA = Path(__file__).resolve().parents[1] / 'sample_data'
+DATA = ROOT
 
 def row(date, eid='', host='NS-DC01', username='jdoe', ip='192.0.2.44', ref='windows:2'):
     return {'when': parse_time(date), 'event_id': eid, 'host': host, 'username': username,
