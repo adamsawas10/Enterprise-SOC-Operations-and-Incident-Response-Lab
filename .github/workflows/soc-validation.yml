@@ -1,0 +1,43 @@
+name: Offline SOC validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Run unit tests
+        run: python3 -m unittest -v test_soc_correlator.py
+
+      - name: Generate and verify SOC triage candidates
+        shell: bash
+        run: |
+          python3 soc_correlator.py \
+            --windows windows.csv \
+            --endpoint endpoint.csv \
+            --network network.csv \
+            --approved approved_activities.csv \
+            --output "$RUNNER_TEMP/soc-verification"
+
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ['RUNNER_TEMP']) / 'soc-verification' / 'correlated_alerts.json'
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['generated_alerts'] == 4, 'Expected four triage candidates'
+          assert [a['id'] for a in data['alerts']] == ['AUTO-001', 'AUTO-002', 'AUTO-003', 'AUTO-004']
+          assert all(a['analyst_verdict'] == 'REVIEW_REQUIRED' for a in data['alerts'])
+          print('Verified: four generated triage candidates; all require analyst review')
+          PY
